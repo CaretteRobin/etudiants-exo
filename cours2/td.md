@@ -15,7 +15,7 @@ Bien lire les MD td.build.md et td.linters.md disponibles dans le dossier cours2
 - [ ] Installer et lancer le projet 
 - [ ] Modifier `PopulateDatabaseCommand.php` pour ajouter des données aléatoire cohérentes (2-4 sociétés avec 2-3 bureaux et une dizaine d'employés) > utiliser PHP Faker (les datafixtures/seeders ne sont pas dans ce projet, il faut faire du code custom) et les setters "magiques" des modeles pour alimenter les données https://laravel.com/docs/12.x/eloquent#inserting-and-updating-models.
 - [ ] Installer PHPStan, PHPCodeSniffer et ESLint dans le projet
-- [ ] Faire une configuration de base pour chaque linter, les tester (et corriger les erreurs eventuelles)
+- [ ] Faire une configuration de base pour chaque linter, les tester, et corriger les erreurs eventuelles (pas forcément celles de PHPStan, ni celles présentes dans le vite.config.js)
 - [ ] Deplacer le js et css (transformer les fichiers SCSS en CSS) dans un dossiers `assets` à la racine du projet, et les build dans un dossier `./public/build` grâce à vite
 
 ### Bonus

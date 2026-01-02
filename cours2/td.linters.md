@@ -38,11 +38,6 @@ Pour simplifier et faciliter l’automatisation, il est conseillé de passer par
 ```
 Vous pouvez y ajouter d’autres paramètres ou niveaux de règles, et le partager facilement dans le projet.
 
-
-- Installer PHPStan, PHPCodeSniffer et ESLint dans le projet  
-- Faire une configuration de base pour chaque linter  
-- Créer un script git hook déclenché avant chaque push
-
 ### PHP Code Sniffer (phpcs)
 [Liens vers la documentation](https://github.com/squizlabs/PHP_CodeSniffer)  
 
