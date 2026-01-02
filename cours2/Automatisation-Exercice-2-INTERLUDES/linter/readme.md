@@ -18,6 +18,14 @@ La commande exacte d'eslint est dans le fichier `package.json` (partie scripts):
 ```json
 "lint": "eslint . --ext .js "
 ```
+On peut ajouter une commande pour fixer les erreurs automatiquement:
+```json
+"lint:fix": "eslint . --fix --ext .js,.vue --ignore-path .gitignore"
+```
+```bash
+docker compose run --rm node npm run lint:fix
+```
+Attention, eslint ne peut pas tout corriger automatiquement, il faut repasser dessus pour corriger les erreurs restantes et vérifier.
 
 ## PHP Code Sniffer
 Pour lancer le linter, il faut lancer la commande suivante:

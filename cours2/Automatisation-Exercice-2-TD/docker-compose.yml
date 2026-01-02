@@ -18,16 +18,24 @@ services:
             - ./:/var/www/html
         extra_hosts:
             - "host.docker.internal:host-gateway"
+        environment:
+            MYSQL_HOST: ${DB_HOST:-database}
+            MYSQL_DATABASE: ${DB_DATABASE:-database}
+            MYSQL_USER: ${DB_USER_NAME:-user}
+            MYSQL_PASSWORD: ${DB_USER_PASSWORD:-password}
             
     database:
-        image: mariadb:11
+        image: mysql
+        # image: mariadb:11 # it's up to you to choose mysql or mariadb
+        # user: "${UID}:${GID}" # uncomment this line if you want to set the user to match host user
+        restart: always
         environment:
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWD:-password}
             MYSQL_DATABASE: ${DB_DATABASE:-database}
             MYSQL_USER: ${DB_USER_NAME:-user}
             MYSQL_PASSWORD: ${DB_USER_PASSWORD:-password}
         volumes:
-            - db-data:/var/lib/mysql
+            - ./docker/db_data:/var/lib/mysql
         ports:
             - "${DB_PORT:-3306}:3306"
 

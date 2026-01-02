@@ -85,7 +85,7 @@ class CreateDatabaseCommand extends Command
 );
         ");
 
-        $db->getConnection()->statement("ALTER TABLE companies ADD CONSTRAINT companies_id_fk_1 FOREIGN KEY (head_office_id) REFERENCES offices (id);");
+//        $db->getConnection()->statement("ALTER TABLE companies ADD CONSTRAINT companies_id_fk_1 FOREIGN KEY (head_office_id) REFERENCES offices (id);");
 
         $output->writeln('Database created successfully!');
         return 0;
