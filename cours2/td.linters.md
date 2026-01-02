@@ -154,7 +154,7 @@ Configuration des scripts dans `package.json` :
 {
     "scripts": {
         "lint": "eslint --ext .js,.vue --ignore-path .gitignore",
-        "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore"
+        "lint:fix": "eslint . --fix --ext .js,.vue --ignore-path .gitignore"
     }
 }
 ```
