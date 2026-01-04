@@ -4,7 +4,7 @@ Appliquer les principes de gitflow pour ces 3 projets.
 Chaque modification doit être faite via une branche `feature/*` et doit être mergée sur la branche `develop` (ou main) via une pull request.
 
 Utiliser les principes gitflow pour ce projet, nommer correctement vos branches et vos commits.
-Vous devez faire fonctionner les projets via un docker-compose.
+Vous devez faire fonctionner les projets via un docker compose.
 Rédiger un README.md pour chaque projet, qui permet d'expliquer sommairement le projet et de détailler son installation et sa méthodologie pour le mettre en route.
 
 ## Exercice PHP
@@ -12,9 +12,9 @@ Commencer par le projet PHP qui est plus détaillé et plus long :
 - [ ] Installer et lancer le projet (le site doit afficher "Hello World", c'est tout) :
     - [ ] Créer un dockerfile pour php (et eventuellement nginx / apache)
     - [ ] Créer un fichier docker-compose.yml pour orchester et démarer les containers nécessaires => Vous devez avoir à minima une image docker pour la bdd, et une pour le serveur php
-    - [ ] Créer un fichier .env.local
+    - [ ] Créer un fichier .env 
 - [ ] Importez les dépendances déja dans le projet grâce à composer
-- [ ] Il manquera une dépendance, l'importer grâce à composer
+- [ ] Il manquera une dépendance (erreur php), l'importer grâce à composer
 - [ ] Completer le readme
 - [ ] Pusher vos modifications
 
