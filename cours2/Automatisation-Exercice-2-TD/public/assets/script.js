@@ -31,12 +31,14 @@ document.addEventListener('keydown', event => {
 
 })
 
-document.querySelector('.offices-list').addEventListener('click', event => {
-    if (event.target.classList.contains('office-edit')) {
-        loadModalContent(`/office/${event.target.dataset.officeId}/edit`, 'Édition du bureau')
-    }
-})
-
+const officesList = document.querySelector('.offices-list');
+if (officesList) {
+    document.querySelector('.offices-list').addEventListener('click', (event) => {
+        if (event.target.classList.contains('office-edit')) {
+            loadModalContent(`/office/${event.target.dataset.officeId}/edit`, 'Édition du bureau');
+        }
+    });
+}
 }
 
 

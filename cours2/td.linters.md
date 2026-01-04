@@ -197,6 +197,9 @@ Puis le placer dans `.git/hooks` (où vous trouverez déjà des exemples) :
 mv pre-commit .git/hooks/
 ```
 
-Il est astucieux de conserver tous les scripts de hook dans un dossier versionné, puis de créer des liens symboliques vers `.git/hooks` pour faciliter leur partage.
+Il est astucieux de conserver tous les scripts de hook dans un dossier versionné, puis de créer des liens symboliques vers `.git/hooks` pour faciliter leur partage :
+```bash
+~/.git/hooks ln -s path/to/versionned/git_hooks/pre-commit pre-commit
+```
 
 Pour une documentation complète, voir : [Git Hooks documentation](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
