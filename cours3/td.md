@@ -16,3 +16,7 @@ Après avoir parcours les différentes classes, vous devrez écrire les tests po
 Pour cela vous devrez créer un fichier `phpunit.xml` pour la configuration de PHPUnit. Vous devrez avoir une attention particulière à la structure de votre dossier test.
 
 Utilisez des dataProvider et des fixtures lorque que cela vous semble pertinant.
+
+### Rendre l'exercice
+Par groupe de 2 ou 3.
+Vous trouverez sur Arche un endroit où déposer un fichier contenant le lien de votre repo GIT auquel je devrai avoir accès (ou m'envoyer par mail) ! Précisez-moi qui est dans le groupe.

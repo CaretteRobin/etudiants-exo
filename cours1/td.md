@@ -19,7 +19,7 @@ Commencer par le projet PHP qui est plus détaillé et plus long :
 - [ ] Pusher vos modifications
 
 ## Exercices JS
-même consigne pour 1 ou 2 des repos JS :
+même consigne pour les repos JS :
 - [ ] Installer et lancer le projet. Le site doit s'afficher
     - [ ] Créer un fichier docker-compose.yml pour le serveur node dans lequel on executera les commandes NPM
     - [ ] Démarrer le container, installer les dépendances, démarrer le serveur

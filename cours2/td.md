@@ -22,3 +22,7 @@ Bien lire les MD td.build.md et td.linters.md disponibles dans le dossier cours2
 - [ ] Utiliser la version serveur de vite pour le développement
 - [ ] Changer le liens des assets dans twig en fonction de la variable d'environnement `ENV` (dev ou prod)
 - [ ] Utiliser le manifest.json pour avoir des noms de fichiers dynamiques avec hash pour le cache en production (= pour utiliser ceux dans /build dynamiquement).
+
+### Rendre l'exercice
+Par groupe de 2 ou 3.
+Vous trouverez sur Arche un endroit où déposer un fichier contenant le lien de votre repo GIT auquel je devrai avoir accès (ou m'envoyer par mail) ! Précisez-moi qui est dans le groupe.
