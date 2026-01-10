@@ -45,22 +45,6 @@ docker compose run --rm node npm run test:coverage
 docker compose run --rm node npm run test:ui
 ```
 
-### [DEPERACTED] Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-docker compose run --rm node npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-docker compose run --rm node npm run build
-docker compose run --rm node npm run test:e2e
-```
-
 ### Lint with [ESLint](https://eslint.org/)
 
 ```sh
@@ -75,10 +59,6 @@ docker compose run --rm node npm run format
 
 ## Structure du projet
 
-- **cypress**: Dossier contenant les tests End-To-End
-  - **e2e** : Fichier de test
-  - **fixture** : Dossier contenant les dataFixtures pour les test
-  - **support** : Configuration de commande global pour cypress
 - **src** : Contient le code source de l'application
   - **assets** : image et css de base pour l'application
   - **component** : Composants Vue
@@ -102,7 +82,3 @@ docker compose run --rm node npm run format
 3. ### Test du Store
 
    - Ecrire les tests pour vérifier que les methodes du store sont corrects
-
-4. ### [DEPRECATED] Test End-To-End Cypress
-
-   - Ecrire au moins un sénario End-To-End en utilisant Cypress. Le sénario doit correspondre au comportement probable d'un utilisateur et tester le bon déroulement.

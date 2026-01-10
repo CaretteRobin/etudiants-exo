@@ -121,3 +121,22 @@ Il faudra aussi définir la variable d’environnement :
 ```bash
 export XDEBUG_MODE=coverage
 ```
+
+## Attendu
+
+Après avoir parcours les différentes classes, vous devrez écrire les tests pour couvrir l'intégralité des use case de ce projet.
+
+Pour cela vous devrez créer un fichier `phpunit.xml` pour la configuration de PHPUnit. Vous devrez avoir une attention particulière à la structure de votre dossier test.
+
+**Vous ne devez pas modifier les classes Entity**, ni changer la visibilité de leurs membres (utilisez des mock dans les tests si besoin). 
+
+Rendu : 3 classes de tests et un rapport de code coverage à 100%. Tous les tests doivent passer et ils doivent être pertinents.
+
+### Tips
+
+Servez vous des rapports de code coverage pour vérifier la pertinence de vos tests.
+
+Si vous rencontrer l'erreur :
+> No code coverage driver available
+
+C'est que vous n'avez pas l'extention XDebug de configuré avec PHP. Pour l'ajouter suivez le [guide d'installation](https://xdebug.org/docs/install) pour votre OS.
