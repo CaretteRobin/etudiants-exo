@@ -1,10 +1,10 @@
 services:
-  server:
-    image: nginx:alpine
-    ports:
-      - 8080:80
-    volumes:
-      - ./public:/usr/share/nginx/html
+#  server:
+#    image: nginx:alpine
+#    ports:
+#      - 8080:80
+#    volumes:
+#      - ./public:/usr/share/nginx/html
 
   node:
     image: node:22-alpine
