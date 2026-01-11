@@ -57,6 +57,9 @@ docker compose run --rm node npm run lint
 docker compose run --rm node npm run format
 ```
 
+Docker est utilisé pour simplifier l'installation des dépendances et l'exécution des commandes, mais ici il est facultatif
+(si vous avez `node` et `npm` installés localement, vous pouvez exécuter les commandes directement).
+
 ## Structure du projet
 
 - **src** : Contient le code source de l'application

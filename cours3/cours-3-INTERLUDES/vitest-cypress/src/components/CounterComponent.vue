@@ -51,7 +51,7 @@ h3 {
 }
 
 #counter {
-  color: #fff;
+  color: #000;
   font-weight: bold;
 }
 </style>

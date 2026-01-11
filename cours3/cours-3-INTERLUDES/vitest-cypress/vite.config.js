@@ -11,6 +11,7 @@ export default defineConfig({
     server: {
         port: 3000,
         open: true,
+        host:'0.0.0.0' // only for docker use
     },
     resolve: {
         alias: {
@@ -22,7 +23,7 @@ export default defineConfig({
         outDir: '../public/build/',
         rollupOptions: {
             input: {
-                'main.js': './assets/main.js',
+                'main.js': './src/main.js',
             }
         }
     },

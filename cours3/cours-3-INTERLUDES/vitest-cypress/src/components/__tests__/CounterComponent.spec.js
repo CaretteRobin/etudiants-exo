@@ -12,7 +12,8 @@ function mountCounter(x = 0) {
           createSpy: vi.fn,
           initialState: {
             counter: { count: x } // start the counter at x instead of 0
-          }
+          },
+          stubActions: false
         })
       ]
     }
@@ -25,8 +26,10 @@ describe('Counter', () => {
     const wrapper = mountCounter(50)
     expect(wrapper.text()).toContain('Counter: 50')
   })
-  describe('Clicks', () => {
-    it('increments counter', () => {})
-    it('decrements counter', () => {})
+})
+describe('Clicks', () => {
+  it('increments counter', async () => {
+  })
+  it('decrements counter', async () => {
   })
 })

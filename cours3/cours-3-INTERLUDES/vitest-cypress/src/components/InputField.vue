@@ -39,6 +39,6 @@ p {
 
 p span {
   font-weight: bold;
-  color: #fff;
+  color: #000;
 }
 </style>
