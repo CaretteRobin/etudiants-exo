@@ -11,21 +11,28 @@ Il y a deux page pour ce projet :
 
 ## Installation
 
+Docker est utilisé pour simplifier l'installation des dépendances et l'exécution des commandes, mais ici il est facultatif
+(si vous avez `node` et `npm` installés localement, vous pouvez exécuter les commandes directement mais ce n'est pas ce que je recommande)
+
+### DOCKER :
+
 ```sh
 docker compose run --rm node npm install
+```
+
+### Start container
+
+```sh
+docker compose up -d
 ```
 
 ### Compile and Hot-Reload for Development
 
 ```sh
-docker compose run --rm node npm run dev
+docker compose exec node npm run dev
 ```
 
-### Compile and Minify for Production
-
-```sh
-docker compose run --rm node npm run build
-```
+=> acces via http://localhost:3000
 
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
 
@@ -45,20 +52,21 @@ docker compose run --rm node npm run test:coverage
 docker compose run --rm node npm run test:ui
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### (facultatif) Lint with [ESLint](https://eslint.org/)
 
 ```sh
 docker compose run --rm node npm run lint
 ```
 
-### Format with [Prettier](https://prettier.io/)
+### (facultatif) Format with [Prettier](https://prettier.io/)
 
 ```sh
 docker compose run --rm node npm run format
 ```
 
-Docker est utilisé pour simplifier l'installation des dépendances et l'exécution des commandes, mais ici il est facultatif
-(si vous avez `node` et `npm` installés localement, vous pouvez exécuter les commandes directement).
+
+## Attendu
+Vous devrez écrire un test pour le composant `Counter`->Increment() et afficher un rapport de code coverage incomplet : Le reste sera fait en TD.
 
 ## Structure du projet
 
@@ -71,17 +79,3 @@ Docker est utilisé pour simplifier l'installation des dépendances et l'exécut
     - **\_\_test\_\_** : Dossier contenant les tests pour le store
   - **views** : Dossier contenant les pages de l'application
 - **coverage** : Dossier contentant les rapports de test coverage
-
-## Attendu
-
-1. ### Test des composants
-
-   - Ecrire les tests pour les composants `Counter` et `InputText`
-
-2. ### Test du Router
-
-   - Ecrire les tests pour vérifier que le router navigue bien sur les bonnes pages.
-
-3. ### Test du Store
-
-   - Ecrire les tests pour vérifier que les methodes du store sont corrects
