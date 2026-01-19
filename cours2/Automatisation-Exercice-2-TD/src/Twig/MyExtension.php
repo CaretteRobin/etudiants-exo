@@ -3,7 +3,6 @@
 namespace App\Twig;
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class MyExtension extends AbstractExtension
@@ -13,39 +12,81 @@ class MyExtension extends AbstractExtension
         return 'my-extension';
     }
 
-		public function getFunctions(): array {
-			return [
-				new TwigFunction('getEnvironmentVariable', [$this, 'getEnvironmentVariable']),
-				new TwigFunction('getViteAssets', [$this, 'getViteAssets']),
-			];
-		}
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('getEnvironmentVariable', [$this, 'getEnvironmentVariable']),
+            new TwigFunction('getViteAssets', [$this, 'getViteAssets']),
+        ];
+    }
 
-		public function getEnvironmentVariable(string $varName): ?string {
-			return $_ENV[$varName] ?? null;
-		}
+    public function getEnvironmentVariable(string $varName): ?string
+    {
+        return $_ENV[$varName] ?? null;
+    }
 
-		public function manifest() {
-			$json_file_path = __DIR__ . '/../../public/build/.vite/manifest.json';
-			if (file_exists($json_file_path)) {
-				$json_data = file_get_contents($json_file_path);
+    private function manifest(): array
+    {
+        $jsonFilePath = __DIR__ . '/../../public/build/.vite/manifest.json';
+        if (!file_exists($jsonFilePath)) {
+            return [];
+        }
 
-				return json_decode($json_data, true);
-			}
+        $jsonData = file_get_contents($jsonFilePath);
+        if ($jsonData === false) {
+            return [];
+        }
 
-			return '';
-		}
+        $decoded = json_decode($jsonData, true);
+        return is_array($decoded) ? $decoded : [];
+    }
 
-		public function getViteAssets(): string {
-			if ($_ENV['ENV'] === 'prod') {
-				$manifest = $this->manifest();
-				if (!$manifest) {
-					return '';
-				}
+    public function getViteAssets(string $type = 'all'): string
+    {
+        $env = $_ENV['ENV'] ?? 'prod';
 
-				return 'xxxxx'; 	// todo : return hashed filenames (css and js) in production, use manifest.json content to dynamise
-			}
-			else {
-				return 'yyyyyy'; // todo : return dev server (app.js and vite client) in development
-			}
-		}
+        if ($env === 'dev') {
+            $scripts = [
+                '<script type="module" src="http://localhost:3000/build/@vite/client"></script>',
+                '<script type="module" src="http://localhost:3000/build/app.js"></script>',
+            ];
+
+            return $this->renderAssets([], $scripts, $type);
+        }
+
+        $manifest = $this->manifest();
+        if (!isset($manifest['app.js'])) {
+            return '';
+        }
+
+        $entry = $manifest['app.js'];
+        $styles = [];
+        $scripts = [];
+
+        if (!empty($entry['css'])) {
+            foreach ($entry['css'] as $cssFile) {
+                $styles[] = sprintf('<link rel="stylesheet" href="/build/%s">', $cssFile);
+            }
+        }
+
+        if (!empty($entry['file'])) {
+            $scripts[] = sprintf('<script type="module" src="/build/%s"></script>', $entry['file']);
+        }
+
+        return $this->renderAssets($styles, $scripts, $type);
+    }
+
+    private function renderAssets(array $styles, array $scripts, string $type): string
+    {
+        $assets = [];
+        if ($type === 'styles' || $type === 'all') {
+            $assets = array_merge($assets, $styles);
+        }
+
+        if ($type === 'scripts' || $type === 'all') {
+            $assets = array_merge($assets, $scripts);
+        }
+
+        return implode("\n", $assets);
+    }
 }
