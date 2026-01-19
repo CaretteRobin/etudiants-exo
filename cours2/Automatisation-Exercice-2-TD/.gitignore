@@ -1,8 +1,8 @@
 /vendor
 /node_modules
+.phpcs-cache
 .env
 
 .DS_STORE
 /.vscode
 /.idea
-
