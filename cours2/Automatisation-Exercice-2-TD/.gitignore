@@ -5,4 +5,5 @@
 .DS_STORE
 /.vscode
 /.idea
+docker/db_data
 
