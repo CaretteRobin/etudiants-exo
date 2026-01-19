@@ -11,7 +11,7 @@ class WalletTest extends TestCase
     #[DataProvider('validCurrencyProvider')]
     public function testConstructInitializesBalanceAndCurrency(string $currency): void
     {
-        $wallet = new Wallet($currency);
+        $wallet = $this->createWallet($currency);
 
         $this->assertSame(0.0, $wallet->getBalance());
         $this->assertSame($currency, $wallet->getCurrency());
@@ -19,7 +19,7 @@ class WalletTest extends TestCase
 
     public function testSetBalanceAllowsZeroAndPositive(): void
     {
-        $wallet = new Wallet('EUR');
+        $wallet = $this->createWallet();
         $wallet->setBalance(12.5);
 
         $this->assertSame(12.5, $wallet->getBalance());
@@ -27,7 +27,7 @@ class WalletTest extends TestCase
 
     public function testSetBalanceRejectsNegative(): void
     {
-        $wallet = new Wallet('EUR');
+        $wallet = $this->createWallet();
 
         $this->expectException(\Exception::class);
         $wallet->setBalance(-1);
@@ -36,7 +36,7 @@ class WalletTest extends TestCase
     #[DataProvider('invalidCurrencyProvider')]
     public function testSetCurrencyRejectsInvalid(string $currency): void
     {
-        $wallet = new Wallet('EUR');
+        $wallet = $this->createWallet();
 
         $this->expectException(\Exception::class);
         $wallet->setCurrency($currency);
@@ -44,7 +44,7 @@ class WalletTest extends TestCase
 
     public function testAddFundAddsAmount(): void
     {
-        $wallet = new Wallet('USD');
+        $wallet = $this->createWallet('USD');
         $wallet->addFund(10.5);
 
         $this->assertSame(10.5, $wallet->getBalance());
@@ -53,7 +53,7 @@ class WalletTest extends TestCase
     #[DataProvider('invalidAmountProvider')]
     public function testAddFundRejectsNegative(float $amount): void
     {
-        $wallet = new Wallet('USD');
+        $wallet = $this->createWallet('USD');
 
         $this->expectException(\Exception::class);
         $wallet->addFund($amount);
@@ -61,7 +61,7 @@ class WalletTest extends TestCase
 
     public function testRemoveFundRemovesAmount(): void
     {
-        $wallet = new Wallet('USD');
+        $wallet = $this->createWallet('USD');
         $wallet->addFund(20.0);
         $wallet->removeFund(5.5);
 
@@ -71,7 +71,7 @@ class WalletTest extends TestCase
     #[DataProvider('invalidAmountProvider')]
     public function testRemoveFundRejectsNegative(float $amount): void
     {
-        $wallet = new Wallet('USD');
+        $wallet = $this->createWallet('USD');
 
         $this->expectException(\Exception::class);
         $wallet->removeFund($amount);
@@ -79,7 +79,7 @@ class WalletTest extends TestCase
 
     public function testRemoveFundRejectsInsufficientFunds(): void
     {
-        $wallet = new Wallet('USD');
+        $wallet = $this->createWallet('USD');
         $wallet->addFund(4.0);
 
         $this->expectException(\Exception::class);
@@ -109,5 +109,10 @@ class WalletTest extends TestCase
             [-0.01],
             [-10.0],
         ];
+    }
+
+    private function createWallet(string $currency = 'EUR'): Wallet
+    {
+        return new Wallet($currency);
     }
 }

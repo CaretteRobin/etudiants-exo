@@ -10,7 +10,7 @@ class ProductTest extends TestCase
 {
     public function testConstructInitializesProduct(): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2, 'EUR' => 3.9], 'food');
+        $product = $this->createProduct();
 
         $this->assertSame('Coffee', $product->getName());
         $this->assertSame('food', $product->getType());
@@ -20,7 +20,7 @@ class ProductTest extends TestCase
     #[DataProvider('invalidTypeProvider')]
     public function testSetTypeRejectsInvalid(string $type): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2], 'food');
+        $product = $this->createProduct(['USD' => 4.2]);
 
         $this->expectException(\Exception::class);
         $product->setType($type);
@@ -29,21 +29,21 @@ class ProductTest extends TestCase
     #[DataProvider('tvaProvider')]
     public function testGetTVAReturnsExpectedRate(string $type, float $expected): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2], $type);
+        $product = $this->createProduct(['USD' => 4.2], $type);
 
         $this->assertSame($expected, $product->getTVA());
     }
 
     public function testListCurrenciesReturnsPriceKeys(): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2, 'EUR' => 3.9], 'food');
+        $product = $this->createProduct();
 
         $this->assertSame(['USD', 'EUR'], $product->listCurrencies());
     }
 
     public function testSetPricesFiltersInvalidEntries(): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2], 'food');
+        $product = $this->createProduct(['USD' => 4.2]);
         $product->setPrices([
             'EUR' => 3.9,
             'USD' => -1,
@@ -55,7 +55,7 @@ class ProductTest extends TestCase
 
     public function testGetPriceReturnsValue(): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2], 'food');
+        $product = $this->createProduct(['USD' => 4.2]);
 
         $this->assertSame(4.2, $product->getPrice('USD'));
     }
@@ -63,7 +63,7 @@ class ProductTest extends TestCase
     #[DataProvider('invalidCurrencyProvider')]
     public function testGetPriceRejectsInvalidCurrency(string $currency): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2], 'food');
+        $product = $this->createProduct(['USD' => 4.2]);
 
         $this->expectException(\Exception::class);
         $product->getPrice($currency);
@@ -71,7 +71,7 @@ class ProductTest extends TestCase
 
     public function testGetPriceRejectsUnavailableCurrency(): void
     {
-        $product = new Product('Coffee', ['USD' => 4.2], 'food');
+        $product = $this->createProduct(['USD' => 4.2]);
 
         $this->expectException(\Exception::class);
         $product->getPrice('EUR');
@@ -101,5 +101,13 @@ class ProductTest extends TestCase
             ['JPY'],
             ['BTC'],
         ];
+    }
+
+    private function createProduct(
+        array $prices = ['USD' => 4.2, 'EUR' => 3.9],
+        string $type = 'food',
+        string $name = 'Coffee'
+    ): Product {
+        return new Product($name, $prices, $type);
     }
 }

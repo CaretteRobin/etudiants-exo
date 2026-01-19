@@ -10,7 +10,7 @@ class PersonTest extends TestCase
 {
     public function testConstructInitializesNameAndWallet(): void
     {
-        $person = new Person('Alice', 'EUR');
+        $person = $this->createPerson();
 
         $this->assertSame('Alice', $person->getName());
         $this->assertSame('EUR', $person->getWallet()->getCurrency());
@@ -19,7 +19,7 @@ class PersonTest extends TestCase
 
     public function testHasFundReturnsFalseThenTrue(): void
     {
-        $person = new Person('Alice', 'EUR');
+        $person = $this->createPerson();
 
         $this->assertFalse($person->hasFund());
 
@@ -29,8 +29,8 @@ class PersonTest extends TestCase
 
     public function testTransfertFundMovesBalance(): void
     {
-        $sender = new Person('Alice', 'EUR');
-        $receiver = new Person('Bob', 'EUR');
+        $sender = $this->createPerson();
+        $receiver = $this->createPerson('Bob');
 
         $sender->getWallet()->addFund(10.0);
         $sender->transfertFund(4.0, $receiver);
@@ -41,8 +41,8 @@ class PersonTest extends TestCase
 
     public function testTransfertFundRejectsDifferentCurrency(): void
     {
-        $sender = new Person('Alice', 'EUR');
-        $receiver = new Person('Bob', 'USD');
+        $sender = $this->createPerson();
+        $receiver = $this->createPerson('Bob', 'USD');
 
         $sender->getWallet()->addFund(10.0);
 
@@ -52,13 +52,13 @@ class PersonTest extends TestCase
 
     public function testDivideWalletSplitsBalanceWithRemainder(): void
     {
-        $owner = new Person('Owner', 'EUR');
+        $owner = $this->createPerson('Owner');
         $owner->getWallet()->addFund(10.0);
 
-        $first = new Person('First', 'EUR');
-        $second = new Person('Second', 'EUR');
-        $third = new Person('Third', 'EUR');
-        $ignored = new Person('Ignored', 'USD');
+        $first = $this->createPerson('First');
+        $second = $this->createPerson('Second');
+        $third = $this->createPerson('Third');
+        $ignored = $this->createPerson('Ignored', 'USD');
 
         $owner->divideWallet([$first, $second, $third, $ignored]);
 
@@ -71,9 +71,9 @@ class PersonTest extends TestCase
 
     public function testBuyProductRemovesFunds(): void
     {
-        $person = new Person('Alice', 'USD');
+        $person = $this->createPerson('Alice', 'USD');
         $person->getWallet()->addFund(10.0);
-        $product = new Product('Coffee', ['USD' => 4.0], 'food');
+        $product = $this->createProduct(['USD' => 4.0]);
 
         $person->buyProduct($product);
 
@@ -82,10 +82,20 @@ class PersonTest extends TestCase
 
     public function testBuyProductRejectsUnsupportedCurrency(): void
     {
-        $person = new Person('Alice', 'EUR');
-        $product = new Product('Coffee', ['USD' => 4.0], 'food');
+        $person = $this->createPerson();
+        $product = $this->createProduct(['USD' => 4.0]);
 
         $this->expectException(\Exception::class);
         $person->buyProduct($product);
+    }
+
+    private function createPerson(string $name = 'Alice', string $currency = 'EUR'): Person
+    {
+        return new Person($name, $currency);
+    }
+
+    private function createProduct(array $prices, string $type = 'food', string $name = 'Coffee'): Product
+    {
+        return new Product($name, $prices, $type);
     }
 }
