@@ -11,8 +11,8 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         provider: 'istanbul', // or 'v8'
-        reporter: ['html']
-        // Todo : completer la configuration
+        reporter: ['html'],
+        exclude: ['.eslintrc.cjs', 'src/main.js']
       }
     }
   })
