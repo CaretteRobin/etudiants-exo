@@ -15,7 +15,6 @@ Vous devrez avoir une attention particulière à la structure de vos dossiers te
 
 #### Partie PHPUnit (le projet n'affiche rien, c'est normal)
 **Vous ne devez pas modifier les classes Entity**, ni changer la visibilité de leurs membres (utilisez des mock dans les tests si besoin).
-Utilisez des dataProvider et des fixtures lorque que cela vous semble pertinant.
 
 Rendu : 3 classes de tests et un rapport de code coverage à 100%. Tous les tests doivent passer et ils doivent être pertinents.
 - [] Corrigez le fichier `phpunit.xml` pour la configuration de PHPUnit (=> pour y inclure les bons répertoires de test et de sources)
