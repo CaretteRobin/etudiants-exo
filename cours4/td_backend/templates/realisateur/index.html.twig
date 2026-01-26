@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Realisateurs{% endblock %}
+
+{% block body %}
+<h1>Realisateurs</h1>
+
+{% if realisateurs is empty %}
+    <p>Aucun realisateur pour le moment.</p>
+{% else %}
+    <ul>
+        {% for realisateur in realisateurs %}
+            <li>
+                <strong>{{ realisateur.prenom }} {{ realisateur.nom }}</strong>
+                {% if realisateur.dateNaissance %}
+                    - ne(e) le {{ realisateur.dateNaissance|date('Y-m-d') }}
+                {% endif %}
+                {% if realisateur.biographie %}<div>{{ realisateur.biographie }}</div>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

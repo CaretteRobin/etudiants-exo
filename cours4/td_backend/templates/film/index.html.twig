@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Films{% endblock %}
+
+{% block body %}
+<h1>Films</h1>
+
+{% if films is empty %}
+    <p>Aucun film pour le moment.</p>
+{% else %}
+    <ul>
+        {% for film in films %}
+            <li>
+                <strong>{{ film.titre }}</strong>
+                {% if film.anneeSortie %} ({{ film.anneeSortie }}){% endif %}
+                - {{ film.realisateur.prenom }} {{ film.realisateur.nom }}
+                {% if film.resume %}<div>{{ film.resume }}</div>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
