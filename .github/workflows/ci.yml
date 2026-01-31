@@ -6,49 +6,49 @@ on:
   pull_request:
 
 jobs:
-  quality-and-deploy:
+  qualite-et-deploiement:
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
         working-directory: cours4/td_backend
     steps:
-      - name: Checkout
+      - name: Recuperer le code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Installer PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
           extensions: ctype, iconv, session, simplexml, tokenizer
           tools: composer
 
-      - name: Install dependencies
+      - name: Installer les dependances
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
-      - name: Copy env if missing
+      - name: Copier le fichier .env si manquant
         run: |
-          if [ ! -f .env.local ]; then
+          if [ ! -f .env ]; then
             if [ -f .env.ci ]; then
-              cp .env.ci .env.local
-            elif [ -f .env ]; then
-              cp .env .env.local
+              cp .env.ci .env
+            elif [ -f .env.local ]; then
+              cp .env.local .env
             else
-              echo "No .env source found (.env.ci or .env)" >&2
+              echo "Aucun fichier .env trouve (.env.ci ou .env.local)" >&2
               exit 1
             fi
           fi
 
-      - name: Run PHPCS
+      - name: Lancer PHPCS
         run: vendor/bin/phpcs -q
 
-      - name: Run PHPStan
+      - name: Lancer PHPStan
         run: vendor/bin/phpstan analyse
 
-      - name: Run PHPUnit
+      - name: Lancer PHPUnit
         run: vendor/bin/phpunit
 
-      - name: Simulated deploy
+      - name: Deploiement simule
         run: |
-          echo "Deploying to production (simulation)..."
-          echo "Deploy complete."
+          echo "Deploiement en production (simulation)..."
+          echo "Deploiement termine."
