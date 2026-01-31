@@ -11,27 +11,27 @@ Prérequis : installer le projet (voir README.md du dossier td_backend).
 Lire les conseils ci dessous avant de commencer + lire le cours associé.
 
 1. **Prendre en main les Makers** (1h)
-   - [ ] Générer les classes nécessaires au projet : 
-      - [ ] Les _entités_ correspondantes. Ajoutez quelques champs très basiques.  Il doit y avoir une relation entre Réalisateur et Film.
-      - [ ] Les _controlleurs_ associés, et leurs vues twig. Vous devez pouvoir accéder aux vues via les routes générées.
-      - [ ] Le fichier de _migration_ & executer la migration pour initialiser la base avec les bonnes tables.
-      - [ ] Une (une seule !) _fixture_ qui peuplera les deux entités (et leur relation) - utiliser FakerPHP pour avoir des données aléatoires. Executer cette fixture pour insérer les données en base.
-   - [ ] Modifier les vues pour remonter les données (de maniere très basique, pas de mise en forme css etc., juste du brut pour l'exemple)
-   - [ ] Bonne pratique : Indiquer dans le readme du projet comment initialiser les données, ainsi que l'url des 2 vues. => Mettez vous a la place d'un nouveau développeur qui arrive sur le projet : il n'aura pas à rééxecuter tout ce que vous venez de faire, uniquement 2 commandes précises, c'est celles ci qu'il faudra m'indiquer.
+   - [x] Générer les classes nécessaires au projet : 
+      - [x] Les _entités_ correspondantes. Ajoutez quelques champs très basiques.  Il doit y avoir une relation entre Réalisateur et Film.
+      - [x] Les _controlleurs_ associés, et leurs vues twig. Vous devez pouvoir accéder aux vues via les routes générées.
+      - [x] Le fichier de _migration_ & executer la migration pour initialiser la base avec les bonnes tables.
+      - [x] Une (une seule !) _fixture_ qui peuplera les deux entités (et leur relation) - utiliser FakerPHP pour avoir des données aléatoires. Executer cette fixture pour insérer les données en base.
+   - [x] Modifier les vues pour remonter les données (de maniere très basique, pas de mise en forme css etc., juste du brut pour l'exemple)
+   - [x] Bonne pratique : Indiquer dans le readme du projet comment initialiser les données, ainsi que l'url des 2 vues. => Mettez vous a la place d'un nouveau développeur qui arrive sur le projet : il n'aura pas à rééxecuter tout ce que vous venez de faire, uniquement 2 commandes précises, c'est celles ci qu'il faudra m'indiquer.
    
 2. **Linters et tests PHP** (15min)
    - [x] Php Unit, PHPStan et PHPCs sont déja ajoutés au projet. Ils ont déja des fichiers de configuration de base.
-   - [ ] Créer des classes de test basiques pour les 2 entités (quelques tests dans chaque pour la démo). Bien structurer les dossiers de tests.
+   - [x] Créer des classes de test basiques pour les 2 entités (quelques tests dans chaque pour la démo). Bien structurer les dossiers de tests.
    - [x] Pas besoin de code coverage, ni de tout tester, ce n'est pas le but aujourd'hui, mais si vous avez envie vous pouvez le faire !
-   - [ ] S’assurer que les linters et tests unitaires fonctionnent et passent correctement en local => corriger les erreurs eventuelles (sinon votre code ne passera pas la CI/CD plus tard !)
+   - [x] S’assurer que les linters et tests unitaires fonctionnent et passent correctement en local => corriger les erreurs eventuelles (sinon votre code ne passera pas la CI/CD plus tard !)
 
 3. **Configurer un pipeline de tests & linters via GitHub Actions ou via GitLab CI** (1h30)
-    - [ ] Créer un fichier de config CI selon la plateforme utilisée, comprenant :
-      - [ ] L'installation des dépendances (composer, phpcs, phpstan, phpunit), déplacement dans l'arbo, copie du .env manquant, etc.. => tout ce qui est nécessaire pour que les jobs suivants puissent s’exécuter correctement. La CI doit déja correctement s'executer ici, même si elle ne fait rien.
-      - [ ] L'execution les linters et les tests, qui devraient être OK puisque vous les aurez joués en local ci-dessus.
-      - [ ] Une étape qui simulera un déploiement en prod. (avec juste des commandes `echo` par exemple, pas besoin d'executer quoi que ce soit ici c'est juste pour comprendre).
-      - [ ] Si un job échoue, les suivants ne doivent pas s’exécuter. En effet, si vos linters ou tests échouent, le déploiement ne doit pas se faire (la CI ne doit pas fixer le code, juste le rejetter).
-    - [ ] Tester le push du code, et suivre l'execution de la CI/CD sur github/gitlab. => je devrai pouvoir y voir dans l'interface un pipeline executé, comprenant toutes les étapes demandées.
+    - [x] Créer un fichier de config CI selon la plateforme utilisée, comprenant :
+      - [x] L'installation des dépendances (composer, phpcs, phpstan, phpunit), déplacement dans l'arbo, copie du .env manquant, etc.. => tout ce qui est nécessaire pour que les jobs suivants puissent s’exécuter correctement. La CI doit déja correctement s'executer ici, même si elle ne fait rien.
+      - [x] L'execution les linters et les tests, qui devraient être OK puisque vous les aurez joués en local ci-dessus.
+      - [x] Une étape qui simulera un déploiement en prod. (avec juste des commandes `echo` par exemple, pas besoin d'executer quoi que ce soit ici c'est juste pour comprendre).
+      - [x] Si un job échoue, les suivants ne doivent pas s’exécuter. En effet, si vos linters ou tests échouent, le déploiement ne doit pas se faire (la CI ne doit pas fixer le code, juste le rejetter).
+    - [x] Tester le push du code, et suivre l'execution de la CI/CD sur github/gitlab. => je devrai pouvoir y voir dans l'interface un pipeline executé, comprenant toutes les étapes demandées.
 
 ### Conseils
 #### Makers :
