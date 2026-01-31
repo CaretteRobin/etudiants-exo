@@ -21,6 +21,13 @@ php bin/console doctrine:fixtures:load --no-interaction
 - http://localhost:8080/films
 - http://localhost:8080/realisateurs
 
+## Tests et linters
+```bash
+vendor/bin/phpcs -q
+vendor/bin/phpstan analyse
+vendor/bin/phpunit
+```
+
 ---
 
 # Note si problemes de docker UNIQUEMENT :
