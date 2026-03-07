@@ -8,6 +8,13 @@ use model\Photo;
 use model\Categorie;
 
 class item {
+    protected $annonce = null;
+    protected $annonceur = null;
+    protected $departement = null;
+    protected $photo = array();
+    protected $categItem = null;
+    protected $dptItem = null;
+
     public function __construct(){
     }
     function afficherItem($twig, $menu, $chemin, $n, $cat) {
@@ -30,8 +37,7 @@ class item {
         $this->annonceur = Annonceur::find($this->annonce->id_annonceur);
         $this->departement = Departement::find($this->annonce->id_departement );
         $this->photo = Photo::where('id_annonce', '=', $n)->get();
-        $template = $twig->loadTemplate("item.html.twig");
-        echo $template->render(array("breadcrumb" => $menu,
+        echo $twig->render("item.html.twig",array("breadcrumb" => $menu,
             "chemin" => $chemin,
             "annonce" => $this->annonce,
             "annonceur" => $this->annonceur,
@@ -46,25 +52,24 @@ class item {
             echo "404";
             return;
         }
-        $template = $twig->loadTemplate("delGet.html.twig");
-        echo $template->render(array("breadcrumb" => $menu,
+        echo $twig->render("delGet.html.twig",array("breadcrumb" => $menu,
             "chemin" => $chemin,
             "annonce" => $this->annonce));
     }
 
 
-    function supprimerItemPost($twig, $menu, $chemin, $n, $cat){
+    function supprimerItemPost($twig, $menu, $chemin, $n, $cat, $allPostVars = array()){
         $this->annonce = Annonce::find($n);
         $reponse = false;
-        if(password_verify($_POST["pass"],$this->annonce->mdp)){
+        $pass = trim((string)($allPostVars['pass'] ?? ($_POST['pass'] ?? '')));
+        if($pass !== '' && password_verify($pass,$this->annonce->mdp)){
             $reponse = true;
             photo::where('id_annonce', '=', $n)->delete();
             $this->annonce->delete();
 
         }
 
-        $template = $twig->loadTemplate("delPost.html.twig");
-        echo $template->render(array("breadcrumb" => $menu,
+        echo $twig->render("delPost.html.twig",array("breadcrumb" => $menu,
             "chemin" => $chemin,
             "annonce" => $this->annonce,
             "pass" => $reponse,
@@ -77,26 +82,25 @@ class item {
             echo "404";
             return;
         }
-        $template = $twig->loadTemplate("modifyGet.html.twig");
-        echo $template->render(array("breadcrumb" => $menu,
+        echo $twig->render("modifyGet.html.twig",array("breadcrumb" => $menu,
             "chemin" => $chemin,
             "annonce" => $this->annonce));
     }
 
-    function modifyPost($twig, $menu, $chemin, $n, $cat, $dpt){
+    function modifyPost($twig, $menu, $chemin, $n, $cat, $dpt, $allPostVars = array()){
         $this->annonce = Annonce::find($n);
         $this->annonceur = Annonceur::find($this->annonce->id_annonceur);
         $this->categItem = Categorie::find($this->annonce->id_categorie)->nom_categorie;
         $this->dptItem = Departement::find($this->annonce->id_departement)->nom_departement;
 
         $reponse = false;
-        if(password_verify($_POST["pass"],$this->annonce->mdp)){
+        $pass = trim((string)($allPostVars['pass'] ?? ($_POST['pass'] ?? '')));
+        if($pass !== '' && password_verify($pass,$this->annonce->mdp)){
             $reponse = true;
 
         }
 
-        $template = $twig->loadTemplate("modifyPost.html.twig");
-        echo $template->render(array("breadcrumb" => $menu,
+        echo $twig->render("modifyPost.html.twig",array("breadcrumb" => $menu,
             "chemin" => $chemin,
             "annonce" => $this->annonce,
             "annonceur" => $this->annonceur,
@@ -111,23 +115,25 @@ class item {
 
         date_default_timezone_set('Europe/Paris');
 
-        function isEmail($email) {
-            return(preg_match("/^[-_.[:alnum:]]+@((([[:alnum:]]|[[:alnum:]][[:alnum:]-]*[[:alnum:]])\.)+(ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|in|info|int|io|iq|ir|is|it|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)$|(([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5])\.){3}([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))$/i", $email));
-        }
+        $getTrimmed = static function (array $data, $key) {
+            return trim((string) ($data[$key] ?? ''));
+        };
 
         /*
         * On récupère tous les champs du formulaire en supprimant
         * les caractères invisibles en début et fin de chaîne.
         */
-        $nom = trim($_POST['nom']);
-        $email = trim($_POST['email']);
-        $phone = trim($_POST['phone']);
-        $ville = trim($_POST['ville']);
-        $departement = trim($_POST['departement']);
-        $categorie = trim($_POST['categorie']);
-        $title = trim($_POST['title']);
-        $description = trim($_POST['description']);
-        $price = trim($_POST['price']);
+        $nom = $getTrimmed($allPostVars, 'nom');
+        $email = $getTrimmed($allPostVars, 'email');
+        $phone = $getTrimmed($allPostVars, 'phone');
+        $phoneNormalized = preg_replace('/\s+/', '', $phone);
+        $ville = $getTrimmed($allPostVars, 'ville');
+        $departement = $getTrimmed($allPostVars, 'departement');
+        $categorie = $getTrimmed($allPostVars, 'categorie');
+        $title = $getTrimmed($allPostVars, 'title');
+        $description = $getTrimmed($allPostVars, 'description');
+        $price = str_replace(',', '.', $getTrimmed($allPostVars, 'price'));
+        $newPassword = $getTrimmed($allPostVars, 'psw');
 
 
         // Tableau d'erreurs personnalisées
@@ -147,19 +153,19 @@ class item {
         if(empty($nom)) {
             $errors['nameAdvertiser'] = 'Veuillez entrer votre nom';
         }
-        if(!isEmail($email)) {
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['emailAdvertiser'] = 'Veuillez entrer une adresse mail correcte';
         }
-        if(empty($phone) && !is_numeric($phone) ) {
+        if($phone === '' || !preg_match('/^\d+$/', $phoneNormalized) ) {
             $errors['phoneAdvertiser'] = 'Veuillez entrer votre numéro de téléphone';
         }
         if(empty($ville)) {
             $errors['villeAdvertiser'] = 'Veuillez entrer votre ville';
         }
-        if(!is_numeric($departement)) {
+        if(!filter_var($departement, FILTER_VALIDATE_INT)) {
             $errors['departmentAdvertiser'] = 'Veuillez choisir un département';
         }
-        if(!is_numeric($categorie)) {
+        if(!filter_var($categorie, FILTER_VALIDATE_INT)) {
             $errors['categorieAdvertiser'] = 'Veuillez choisir une catégorie';
         }
         if(empty($title)) {
@@ -168,7 +174,7 @@ class item {
         if(empty($description)) {
             $errors['descriptionAdvertiser'] = 'Veuillez entrer une description';
         }
-        if(empty($price) || !is_numeric($price)) {
+        if($price === '' || !is_numeric($price)) {
             $errors['priceAdvertiser'] = 'Veuillez entrer un prix';
         }
 
@@ -178,8 +184,7 @@ class item {
         // S'il y a des erreurs on redirige vers la page d'erreur
         if (!empty($errors)) {
 
-            $template = $twig->loadTemplate("add-error.html.twig");
-            echo $template->render(array(
+            echo $twig->render("add-error.html.twig",array(
                     "breadcrumb" => $menu,
                     "chemin" => $chemin,
                     "errors" => $errors)
@@ -192,23 +197,24 @@ class item {
             $this->annonceur = Annonceur::find($idannonceur);
 
 
-            $this->annonceur->email = htmlentities($allPostVars['email']);
-            $this->annonceur->nom_annonceur = htmlentities($allPostVars['nom']);
-            $this->annonceur->telephone = htmlentities($allPostVars['phone']);
-            $this->annonce->ville = htmlentities($allPostVars['ville']);
-            $this->annonce->id_departement = $allPostVars['departement'];
-            $this->annonce->prix = htmlentities($allPostVars['price']);
-            $this->annonce->mdp = password_hash ($allPostVars['psw'], PASSWORD_DEFAULT);
-            $this->annonce->titre = htmlentities($allPostVars['title']);
-            $this->annonce->description = htmlentities($allPostVars['description']);
-            $this->annonce->id_categorie = $allPostVars['categorie'];
+            $this->annonceur->email = htmlspecialchars($email, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->annonceur->nom_annonceur = htmlspecialchars($nom, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->annonceur->telephone = htmlspecialchars($phone, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->annonce->ville = htmlspecialchars($ville, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->annonce->id_departement = (int) $departement;
+            $this->annonce->prix = (float) $price;
+            if($newPassword !== '') {
+                $this->annonce->mdp = password_hash($newPassword, PASSWORD_DEFAULT);
+            }
+            $this->annonce->titre = htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->annonce->description = htmlspecialchars($description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $this->annonce->id_categorie = (int) $categorie;
             $this->annonce->date = date('Y-m-d');
             $this->annonceur->save();
             $this->annonceur->annonce()->save($this->annonce);
 
 
-            $template = $twig->loadTemplate("modif-confirm.html.twig");
-            echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin));
+            echo $twig->render("modif-confirm.html.twig",array("breadcrumb" => $menu, "chemin" => $chemin));
         }
     }
 }

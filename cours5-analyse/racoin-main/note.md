@@ -68,20 +68,54 @@
   - `illuminate/database` (version `4.2.9`, datée 2014 dans `composer.lock`).
   - `slim/slim` (version `2.6.3`, datée 2017 dans `composer.lock`).
 
-### Todo list maintenance (priorisée)
-- `1) Corriger les vulnérabilités Composer (Twig/Carbon)`: Temps **4/10** - Impact **10/10**.
-- `2) Migrer Slim 2 vers Slim 4 (routing, middlewares, bootstrap)`: Temps **9/10** - Impact **9/10**.
-- `3) Migrer Twig 1 vers Twig 3`: Temps **6/10** - Impact **8/10**.
-- `4) Migrer Eloquent/Illuminate 4.2 vers version supportée`: Temps **8/10** - Impact **8/10**.
-- `5) Monter le runtime PHP vers une version actuelle (8.2/8.3)`: Temps **7/10** - Impact **9/10**.
-- `6) Réactiver une vraie protection CSRF (actuellement commentée)`: Temps **3/10** - Impact **8/10**.
-- `7) Renforcer validation/sanitization des entrées + hashing cohérent`: Temps **5/10** - Impact **8/10**.
-- `8) Passer le schéma MySQL en InnoDB + clés étrangères`: Temps **5/10** - Impact **7/10**.
-- `9) Ajouter une CI minimale (lint PHP + smoke tests + composer audit)`: Temps **4/10** - Impact **7/10**.
-- `10) Ajouter des tests fonctionnels sur routes critiques`: Temps **6/10** - Impact **7/10**.
+### Plan de maintenance priorisé
+- `P1 - Corriger les vulnérabilités Composer (Twig/Carbon)`: Temps **4/10** - Impact **10/10**.
+- `P1 - Réactiver une vraie protection CSRF (actuellement commentée)`: Temps **3/10** - Impact **8/10**.
+- `P1 - Renforcer validation/sanitization des entrées + hashing cohérent`: Temps **5/10** - Impact **8/10**.
+- `P1 - Ajouter une CI minimale (lint PHP + smoke tests + composer audit)`: Temps **4/10** - Impact **7/10**.
+- `P2 - Monter le runtime PHP vers une version actuelle (8.2/8.3)`: Temps **7/10** - Impact **9/10**.
+- `P2 - Migrer Twig 1 vers Twig 3`: Temps **6/10** - Impact **8/10**.
+- `P2 - Migrer Slim 2 vers Slim 4 (routing, middlewares, bootstrap)`: Temps **9/10** - Impact **9/10**.
+- `P2 - Migrer Eloquent/Illuminate 4.2 vers version supportée`: Temps **8/10** - Impact **8/10**.
+- `P3 - Ajouter des tests fonctionnels sur routes critiques`: Temps **6/10** - Impact **7/10**.
+- `P3 - Passer le schéma MySQL en InnoDB + clés étrangères`: Temps **5/10** - Impact **7/10**.
 
 ### Données de référence utilisées pour l'étape 3
 - `docker compose run --rm --entrypoint composer app outdated --direct`
 - `docker compose run --rm --entrypoint composer app audit --no-dev`
 - `docker compose run --rm --entrypoint composer app show --locked --format=json`
 - `composer.lock` (versions et dates des packages)
+
+## Étape 4 - Réaliser la maintenance
+
+### Mises à jour effectuées
+- **Langage/runtime**:
+  - Docker PHP mis à jour de `7.4` vers `8.3` (`docker/php/Dockerfile`).
+- **Frameworks/libs majeures**:
+  - `slim/slim`: `2.6.3` -> `4.15.1`
+  - `twig/twig`: `1.44.8` -> `3.23.0`
+  - `illuminate/database`: `4.2.9` -> `10.49.0`
+  - `illuminate/events`: ajouté en `10.49.0` (compat Eloquent moderne)
+  - `nesbot/carbon`: `1.39.1` -> `2.73.0` (transitif)
+- **Autoload**:
+  - passage en `classmap` pour `controller/`, `model/`, `db/` (fiable avec Composer 2 moderne).
+
+### Adaptations de code réalisées
+- Migration du front controller `index.php` vers **Slim 4** (routing PSR-7/PSR-15).
+- Ajout de `router.php` pour le serveur PHP builtin (routing correct sur URLs non-fichiers).
+- Migration Twig côté code: suppression `loadTemplate()` au profit de `$twig->render(...)`.
+- Correction de compatibilité PHP 8:
+  - remplacement des fonctions locales `isEmail()` par closures (évite erreurs de redéclaration),
+  - correction des appels `modifyPost` / `edit` (arguments cohérents avec les signatures).
+- Maintien de la compatibilité fonctionnelle des routes web et API existantes.
+
+### Validation après migration
+- `docker compose up --build -d`: OK.
+- `http://localhost:8080/`: OK (HTTP 200).
+- `http://localhost:8080/search/`: OK.
+- `http://localhost:8080/api/annonces/`: OK (JSON).
+- `http://localhost:8080/api/categories/`: OK (JSON).
+- `composer audit --no-dev`: **aucune vulnérabilité trouvée**.
+
+### Remarques
+- `composer outdated --direct` indique encore des majors possibles (`Illuminate 12`), mais la stack est maintenant sur des versions maintenues et sans vulnérabilité remontée par `composer audit`.

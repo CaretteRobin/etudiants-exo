@@ -1,19 +1,25 @@
 {
     "require": {
-        "slim/slim": "2.*",
-        "twig/twig": "~1.0",
-        "illuminate/database": "4.2.9"
+        "php": "^8.2",
+        "slim/slim": "^4.15",
+        "slim/psr7": "^1.7",
+        "twig/twig": "^3.11",
+        "illuminate/database": "^10.48",
+        "illuminate/events": "^10.48"
     },
-    "autoload":{
-        "psr-0":{
-            "controller":"",
-            "model":"",
-            "db":""
-        }
+    "autoload": {
+        "classmap": [
+            "controller/",
+            "model/",
+            "db/"
+        ]
     },
     "config": {
         "allow-plugins": {
-            "kylekatarnls/update-helper": true
+            "kylekatarnls/update-helper": false
+        },
+        "audit": {
+            "block-insecure": false
         }
     }
 }

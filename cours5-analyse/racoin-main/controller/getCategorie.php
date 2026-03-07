@@ -10,6 +10,7 @@ use model\Annonceur;
 class getCategorie {
 
     protected $categories = array();
+    protected $annonce = array();
 
     public function getCategories() {
         return Categorie::orderBy('nom_categorie')->get()->toArray();
@@ -36,7 +37,7 @@ class getCategorie {
     }
 
     public function displayCategorie($twig, $menu, $chemin, $cat, $n) {
-        $template = $twig->loadTemplate("index.html.twig");
+        $template = "index.html.twig";
         $menu = array(
             array('href' => $chemin,
                 'text' => 'Acceuil'),
@@ -45,7 +46,7 @@ class getCategorie {
         );
 
         $this->getCategorieContent($chemin, $n);
-        echo $template->render(array(
+        echo $twig->render($template, array(
             "breadcrumb" => $menu,
             "chemin" => $chemin,
             "categories" => $cat,
