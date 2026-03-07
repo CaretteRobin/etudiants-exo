@@ -56,6 +56,11 @@ Valeurs par défaut déjà définies dans `docker-compose.yml`.
 - `DB_PASSWORD` (défaut: `racoin`)
 - `DB_ROOT_PASSWORD` (défaut: `root`)
 
+Exemple:
+```bash
+APP_PORT=8090 MYSQL_PORT=3307 docker compose up --build
+```
+
 ## Lancer sans Docker (optionnel)
 Le mode recommandé reste Docker (plus reproductible).
 
@@ -88,6 +93,14 @@ php -S 0.0.0.0:8080 -t . router.php
 - Recherche: `http://localhost:8080/search/`
 - API annonces: `http://localhost:8080/api/annonces/`
 - API catégories: `http://localhost:8080/api/categories/`
+
+## Commandes utiles maintenance
+```bash
+docker compose run --rm --entrypoint composer app run lint
+docker compose run --rm --entrypoint composer app run audit:prod
+docker compose run --rm --entrypoint composer app outdated --direct
+docker compose run --rm --entrypoint composer app audit --no-dev
+```
 
 ## Notes
 - `note.md` contient les réponses d'analyse théorique et les actions de maintenance réalisées.

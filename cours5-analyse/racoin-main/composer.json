@@ -21,5 +21,9 @@
         "audit": {
             "block-insecure": false
         }
+    },
+    "scripts": {
+        "lint": "find . -maxdepth 2 -name '*.php' -print0 | xargs -0 -n1 php -l",
+        "audit:prod": "composer audit --no-dev"
     }
 }

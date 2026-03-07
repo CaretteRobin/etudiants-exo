@@ -16,7 +16,7 @@
 - **JavaScript** (scripts front)
 
 ### 2) Frameworks / libs principaux utilisés
-- **Slim 2** (`slim/slim` 2.*)
+- **Slim 2** (`slim/slim` 2.\*)
 - **Twig 1** (`twig/twig` ~1.0)
 - **Eloquent ORM / Illuminate Database** (`illuminate/database` 4.2.9)
 
@@ -29,11 +29,11 @@
 - exposer quelques endpoints API (`/api/...`).
 
 ### 4) Première estimation pour démarrer l'application
-- Un runtime **PHP compatible legacy**.
+- Un runtime **PHP compatible legacy** (7.4 fonctionne bien avec ce code).
 - Une base **MySQL/MariaDB** avec les tables et données d'initialisation (`bdd.sql`, `insert.sql`, `apikey.sql`).
 - Les dépendances Composer à installer (`vendor/` absent au clone).
 - Une configuration DB (`config/config.ini` ou variables d'environnement).
-- Un serveur HTTP local (`php -S` peut suffire).
+- Un serveur HTTP local (`php -S` suffit ici).
 
 ## Actions appliquées pour fiabiliser le démarrage local
 - Ajout d'un `docker-compose.yml` complet (app + MariaDB).
@@ -68,17 +68,17 @@
   - `illuminate/database` (version `4.2.9`, datée 2014 dans `composer.lock`).
   - `slim/slim` (version `2.6.3`, datée 2017 dans `composer.lock`).
 
-### Plan de maintenance priorisé
-- `P1 - Corriger les vulnérabilités Composer (Twig/Carbon)`: Temps **4/10** - Impact **10/10**.
-- `P1 - Réactiver une vraie protection CSRF (actuellement commentée)`: Temps **3/10** - Impact **8/10**.
-- `P1 - Renforcer validation/sanitization des entrées + hashing cohérent`: Temps **5/10** - Impact **8/10**.
-- `P1 - Ajouter une CI minimale (lint PHP + smoke tests + composer audit)`: Temps **4/10** - Impact **7/10**.
-- `P2 - Monter le runtime PHP vers une version actuelle (8.2/8.3)`: Temps **7/10** - Impact **9/10**.
-- `P2 - Migrer Twig 1 vers Twig 3`: Temps **6/10** - Impact **8/10**.
-- `P2 - Migrer Slim 2 vers Slim 4 (routing, middlewares, bootstrap)`: Temps **9/10** - Impact **9/10**.
-- `P2 - Migrer Eloquent/Illuminate 4.2 vers version supportée`: Temps **8/10** - Impact **8/10**.
-- `P3 - Ajouter des tests fonctionnels sur routes critiques`: Temps **6/10** - Impact **7/10**.
-- `P3 - Passer le schéma MySQL en InnoDB + clés étrangères`: Temps **5/10** - Impact **7/10**.
+### Todo list maintenance (priorisée)
+- `1) Corriger les vulnérabilités Composer (Twig/Carbon)`: Temps **4/10** - Impact **10/10**.
+- `2) Migrer Slim 2 vers Slim 4 (routing, middlewares, bootstrap)`: Temps **9/10** - Impact **9/10**.
+- `3) Migrer Twig 1 vers Twig 3`: Temps **6/10** - Impact **8/10**.
+- `4) Migrer Eloquent/Illuminate 4.2 vers version supportée`: Temps **8/10** - Impact **8/10**.
+- `5) Monter le runtime PHP vers une version actuelle (8.2/8.3)`: Temps **7/10** - Impact **9/10**.
+- `6) Réactiver une vraie protection CSRF (actuellement commentée)`: Temps **3/10** - Impact **8/10**.
+- `7) Renforcer validation/sanitization des entrées + hashing cohérent`: Temps **5/10** - Impact **8/10**.
+- `8) Passer le schéma MySQL en InnoDB + clés étrangères`: Temps **5/10** - Impact **7/10**.
+- `9) Ajouter une CI minimale (lint PHP + smoke tests + composer audit)`: Temps **4/10** - Impact **7/10**.
+- `10) Ajouter des tests fonctionnels sur routes critiques`: Temps **6/10** - Impact **7/10**.
 
 ### Données de référence utilisées pour l'étape 3
 - `docker compose run --rm --entrypoint composer app outdated --direct`
@@ -119,3 +119,38 @@
 
 ### Remarques
 - `composer outdated --direct` indique encore des majors possibles (`Illuminate 12`), mais la stack est maintenant sur des versions maintenues et sans vulnérabilité remontée par `composer audit`.
+
+## Étape 5 (bonus) - amélioration continue
+
+### Améliorations sélectionnées et réalisées
+- **Amélioration 1 (todo #7): renforcer validation/sanitization des entrées**
+  - Durcissement des contrôleurs `addItem`, `item`, `Search`:
+    - lecture défensive des champs POST (valeurs par défaut, trim),
+    - validation email via `filter_var`,
+    - validation téléphone corrigée (évite valeurs alphanumériques),
+    - validation numérique stricte pour département/catégorie/prix,
+    - protection contre index absents sur formulaires partiels,
+    - sanitization homogène via `htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`.
+  - Correction de robustesse:
+    - suppression/modification d'annonce: gestion sûre du mot de passe absent,
+    - édition d'annonce: mot de passe mis à jour uniquement s'il est fourni.
+
+- **Amélioration 2 (todo #9): outillage qualité minimal**
+  - Ajout de scripts Composer:
+    - `composer run lint` (lint PHP sur le code projet),
+    - `composer run audit:prod` (audit sécurité des dépendances prod).
+  - Documentation des commandes dans `README.md`.
+
+### Pourquoi ces améliorations en priorité
+- Elles apportent un **gain sécurité/fiabilité immédiat** sans régression fonctionnelle majeure.
+- Elles sont **rapides à vérifier en local** et adaptées au cadre maintenance.
+- Elles préparent mieux le projet pour les évolutions futures (contrôles de qualité répétables).
+
+### Validation des améliorations (étape 5)
+- `composer run lint`: OK.
+- `composer run audit:prod`: OK (aucune vulnérabilité).
+- Smoke tests HTTP:
+  - `GET /search` et `POST /search`: OK sans warnings.
+  - `POST /add` invalide: messages d'erreur attendus, sans warnings PHP.
+  - `POST /del/{id}` sans mot de passe: page cohérente, sans warnings.
+  - `POST /item/{id}/edit` sans mot de passe: page cohérente, sans warnings.
