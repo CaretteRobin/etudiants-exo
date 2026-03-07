@@ -7,7 +7,7 @@ Créez un fichier notes.md pour noter toutes vos observations. Devrons y figurer
 
 Le but n'est pas d'avoir un document administratif complexe, juste du contexte pour vous et les autres personnes qui travailleraient sur le projet.
 
-### Instructions
+### Exercice
 #### Préambule : 
 /!\ on ne fait pas ici d'ajout de fonctionnalités mais de la maintenance applicative (sécurité, fiabilité, amélioration du code, etc.). Pensez aux choses vues dans le 1er module (automatisation du dev.), et dans ce cours.
 
