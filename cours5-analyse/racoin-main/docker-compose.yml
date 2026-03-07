@@ -1,10 +1,45 @@
-version: '3.8'
 services:
-  php: 
-    build: './docker/php'
-    user: ${UID:-1000}:${GID:-1000}
+  app:
+    build: ./docker/php
+    user: "${UID:-1000}:${GID:-1000}"
     ports:
-      - ${PHP_PORT:-8080}:80
+      - "${APP_PORT:-8080}:80"
+    environment:
+      DB_DRIVER: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-racoin}
+      DB_USERNAME: ${DB_USERNAME:-racoin}
+      DB_PASSWORD: ${DB_PASSWORD:-racoin}
+      DB_CHARSET: utf8
+      DB_COLLATION: utf8_general_ci
     volumes:
       - ./:/var/www/html
-    command: php -S 0.0.0.0:80 -t .
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh docker/php/entrypoint.sh
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-racoin}
+      MYSQL_USER: ${DB_USERNAME:-racoin}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-racoin}
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./bdd.sql:/docker-entrypoint-initdb.d/10-bdd.sql:ro
+      - ./insert.sql:/docker-entrypoint-initdb.d/20-insert.sql:ro
+      - ./apikey.sql:/docker-entrypoint-initdb.d/30-apikey.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  db_data:
