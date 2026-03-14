@@ -4,8 +4,8 @@ namespace Test;
 
 use PHPUnit\Framework\TestCase;
 
-use App\User;
 use App\MusicBand;
+use App\User;
 
 class UserMusicBandTest extends TestCase
 {
@@ -13,8 +13,7 @@ class UserMusicBandTest extends TestCase
     {
         $albert = new User('Albert Mudhat');
         $michelle = new User('Michelle Ectron');
-        $yves = new User('Yves Haigé');
-
+        $yves = new User('Yves Haige');
 
         $band = new MusicBand('Daft PHPunk');
 
@@ -26,9 +25,8 @@ class UserMusicBandTest extends TestCase
 
         $band->addNewConcertDate('19/11/2027.', 'Bercy');
 
-        $this->assertFalse($albert->isNotified());
+        $this->assertTrue($albert->isNotified());
         $this->assertTrue($michelle->isNotified());
-        $this->assertTrue($yves->isNotified());
+        $this->assertFalse($yves->isNotified());
     }
-
 }
