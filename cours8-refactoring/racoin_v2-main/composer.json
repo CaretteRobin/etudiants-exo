@@ -4,6 +4,7 @@
         "slim/slim": "3.*",
         "twig/twig": "3.*",
         "illuminate/database": "11.*",
+        "monolog/monolog": "^3.8",
         "ext-mysqli": "*",
         "ext-pdo": "*"
     },

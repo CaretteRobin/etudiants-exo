@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Bootstrap;
 
 use App\Infrastructure\Database\Connection;
+use App\Logging\LoggerFactory;
+use App\Middleware\HttpRequestLoggerMiddleware;
 use App\Middleware\TrailingSlashMiddleware;
 use App\Routes;
 use Slim\App;
@@ -30,7 +32,9 @@ final class AppFactory
 
         $twig = new Environment(new FilesystemLoader($this->projectRoot . '/template'));
         $basePath = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
+        $httpLogger = LoggerFactory::createHttpLogger($this->projectRoot . '/var/log/http.log');
 
+        $app->add(new HttpRequestLoggerMiddleware($httpLogger));
         $app->add(new TrailingSlashMiddleware());
 
         Routes::register($app, $twig, $basePath);

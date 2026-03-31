@@ -20,3 +20,4 @@ config/db.ini
 
 
 node_modules
+var/log/*.log
