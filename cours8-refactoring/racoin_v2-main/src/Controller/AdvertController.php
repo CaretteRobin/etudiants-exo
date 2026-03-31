@@ -7,18 +7,22 @@ namespace App\Controller;
 use App\Model\Advert;
 use App\Model\Advertiser;
 use App\Model\Category;
-use App\Model\Department;
-use App\Model\Photo;
+use App\Service\AdvertPersistenceService;
+use App\Service\AdvertViewService;
 use App\Support\AdvertFormValidator;
 use Twig\Environment;
 
 final class AdvertController
 {
     private readonly AdvertFormValidator $validator;
+    private readonly AdvertPersistenceService $advertPersistenceService;
+    private readonly AdvertViewService $advertViewService;
 
     public function __construct()
     {
         $this->validator = new AdvertFormValidator();
+        $this->advertPersistenceService = new AdvertPersistenceService();
+        $this->advertViewService = new AdvertViewService();
     }
 
     public function showItem(Environment $twig, array $menu, string $basePath, int $advertId, array $categories): void
@@ -36,8 +40,8 @@ final class AdvertController
         ];
 
         $advertiser = Advertiser::find($advert->id_annonceur);
-        $department = Department::find($advert->id_departement);
-        $photos = Photo::where('id_annonce', '=', $advertId)->get();
+        $departmentName = $this->advertViewService->getDepartmentName((int) $advert->id_departement);
+        $photos = $this->advertViewService->getPhotosForAdvert($advertId);
         $template = $twig->load('item.html.twig');
 
         echo $template->render([
@@ -45,7 +49,7 @@ final class AdvertController
             'chemin' => $basePath,
             'annonce' => $advert,
             'annonceur' => $advertiser,
-            'dep' => $department->nom_departement,
+            'dep' => $departmentName,
             'photo' => $photos,
             'categories' => $categories,
         ]);
@@ -74,7 +78,7 @@ final class AdvertController
 
         if ($advert !== null && password_verify((string) ($payload['pass'] ?? ''), $advert->mdp)) {
             $accepted = true;
-            Photo::where('id_annonce', '=', $advertId)->delete();
+            $this->advertViewService->getPhotosForAdvert($advertId)->each->delete();
             $advert->delete();
         }
 
@@ -108,8 +112,8 @@ final class AdvertController
     {
         $advert = Advert::find($advertId);
         $advertiser = $advert !== null ? Advertiser::find($advert->id_annonceur) : null;
-        $categoryName = $advert !== null ? Category::find($advert->id_categorie)->nom_categorie : null;
-        $departmentName = $advert !== null ? Department::find($advert->id_departement)->nom_departement : null;
+        $categoryName = $advert !== null ? $this->advertViewService->getCategoryName((int) $advert->id_categorie) : null;
+        $departmentName = $advert !== null ? $this->advertViewService->getDepartmentName((int) $advert->id_departement) : null;
 
         $accepted = false;
         if ($advert !== null && password_verify((string) ($payload['pass'] ?? ''), $advert->mdp)) {
@@ -152,26 +156,10 @@ final class AdvertController
             return;
         }
 
-        $advertiser = Advertiser::find($advert->id_annonceur);
-        if ($advertiser === null) {
+        if (!$this->advertPersistenceService->updateFromPayload($advert, $payload)) {
             echo '404';
             return;
         }
-
-        $advertiser->email = htmlentities((string) $payload['email']);
-        $advertiser->nom_annonceur = htmlentities((string) $payload['nom']);
-        $advertiser->telephone = htmlentities((string) $payload['phone']);
-        $advert->ville = htmlentities((string) $payload['ville']);
-        $advert->id_departement = $payload['departement'];
-        $advert->prix = htmlentities((string) $payload['price']);
-        $advert->mdp = password_hash((string) ($payload['psw'] ?? ''), PASSWORD_DEFAULT);
-        $advert->titre = htmlentities((string) $payload['title']);
-        $advert->description = htmlentities((string) $payload['description']);
-        $advert->id_categorie = $payload['categorie'];
-        $advert->date = date('Y-m-d');
-
-        $advertiser->save();
-        $advertiser->advertisements()->save($advert);
 
         $template = $twig->load('modif-confirm.html.twig');
         echo $template->render([

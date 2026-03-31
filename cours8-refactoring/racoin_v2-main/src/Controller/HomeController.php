@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\Advert;
-use App\Model\Advertiser;
-use App\Model\Photo;
+use App\Service\AdvertViewService;
 use Twig\Environment;
 
 final class HomeController
 {
-    protected array $advertisements = [];
+    private readonly AdvertViewService $advertViewService;
+
+    public function __construct()
+    {
+        $this->advertViewService = new AdvertViewService();
+    }
 
     public function displayAllAdvertisements(Environment $twig, array $menu, string $basePath, array $categories): void
     {
@@ -20,32 +24,18 @@ final class HomeController
             ['href' => $basePath, 'text' => 'Acceuil'],
         ];
 
-        $this->loadLatestAdvertisements();
-
         echo $template->render([
             'breadcrumb' => $breadcrumb,
             'chemin' => $basePath,
             'categories' => $categories,
-            'annonces' => $this->advertisements,
+            'annonces' => $this->loadLatestAdvertisements(),
         ]);
     }
 
-    protected function loadLatestAdvertisements(): void
+    protected function loadLatestAdvertisements(): array
     {
         $records = Advert::with('advertiser')->orderBy('id_annonce', 'desc')->take(12)->get();
-        $advertisements = [];
 
-        foreach ($records as $record) {
-            $record->nb_photo = Photo::where('id_annonce', '=', $record->id_annonce)->count();
-            $record->url_photo = $record->nb_photo > 0
-                ? Photo::select('url_photo')->where('id_annonce', '=', $record->id_annonce)->first()->url_photo
-                : '/img/noimg.png';
-            $record->nom_annonceur = Advertiser::select('nom_annonceur')
-                ->where('id_annonceur', '=', $record->id_annonceur)
-                ->first()->nom_annonceur;
-            $advertisements[] = $record;
-        }
-
-        $this->advertisements = $advertisements;
+        return $this->advertViewService->enrichCollection($records, '/img/noimg.png');
     }
 }

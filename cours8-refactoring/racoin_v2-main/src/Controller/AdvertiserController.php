@@ -6,11 +6,18 @@ namespace App\Controller;
 
 use App\Model\Advert;
 use App\Model\Advertiser;
-use App\Model\Photo;
+use App\Service\AdvertViewService;
 use Twig\Environment;
 
 final class AdvertiserController
 {
+    private readonly AdvertViewService $advertViewService;
+
+    public function __construct()
+    {
+        $this->advertViewService = new AdvertViewService();
+    }
+
     public function show(Environment $twig, array $menu, string $basePath, int $advertiserId, array $categories): void
     {
         $this->annonceur = Advertiser::find($advertiserId);
@@ -20,16 +27,7 @@ final class AdvertiserController
         }
 
         $records = Advert::where('id_annonceur', '=', $advertiserId)->get();
-        $advertisements = [];
-
-        foreach ($records as $record) {
-            $record->nb_photo = Photo::where('id_annonce', '=', $record->id_annonce)->count();
-            $record->url_photo = $record->nb_photo > 0
-                ? Photo::select('url_photo')->where('id_annonce', '=', $record->id_annonce)->first()->url_photo
-                : $basePath . '/img/noimg.png';
-
-            $advertisements[] = $record;
-        }
+        $advertisements = $this->advertViewService->enrichCollection($records, $basePath . '/img/noimg.png');
 
         $template = $twig->load('annonceur.html.twig');
         echo $template->render([
