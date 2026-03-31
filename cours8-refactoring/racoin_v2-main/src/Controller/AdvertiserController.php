@@ -9,7 +9,7 @@ use App\Model\Advertiser;
 use App\Model\Photo;
 use Twig\Environment;
 
-class AdvertiserController
+final class AdvertiserController
 {
     public function show(Environment $twig, array $menu, string $basePath, int $advertiserId, array $categories): void
     {

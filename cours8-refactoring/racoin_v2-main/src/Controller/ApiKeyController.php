@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Model\ApiKey;
 use Twig\Environment;
 
-class ApiKeyController
+final class ApiKeyController
 {
     public function showForm(Environment $twig, array $menu, string $basePath, array $categories): void
     {

@@ -12,9 +12,9 @@ use App\Model\Photo;
 use App\Support\AdvertFormValidator;
 use Twig\Environment;
 
-class AdvertController
+final class AdvertController
 {
-    private AdvertFormValidator $validator;
+    private readonly AdvertFormValidator $validator;
 
     public function __construct()
     {

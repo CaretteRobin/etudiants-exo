@@ -1,27 +1,33 @@
 <?php
-(PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) && die('cli only');
 
-// Get the config.ini file
+declare(strict_types=1);
+
+(PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) && exit('cli only');
+
 $config = parse_ini_file(__DIR__ . '/../config/config.ini');
+if ($config === false) {
+    throw new RuntimeException('Unable to load config/config.ini.');
+}
 
-
-// Run queries with mysqli
 $mysqli = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
 
 if ($mysqli->connect_error) {
-    die('Connection failed: ' . $mysqli->connect_error);
+    throw new RuntimeException('Connection failed: ' . $mysqli->connect_error);
 }
 
-function executeScript($mysqli, $filename): void
+function executeScript(mysqli $mysqli, string $filename): void
 {
     $sql = file_get_contents($filename);
-    $mysqli->multi_query($sql);
-    while(mysqli_more_results($mysqli))
-    {
-        mysqli_next_result($mysqli);
+    if ($sql === false) {
+        throw new RuntimeException(sprintf('Unable to read SQL file "%s".', $filename));
     }
 
+    $mysqli->multi_query($sql);
+    while (mysqli_more_results($mysqli)) {
+        mysqli_next_result($mysqli);
+    }
 }
+
 executeScript($mysqli, __DIR__ . '/create_schema.sql');
 executeScript($mysqli, __DIR__ . '/import_data.sql');
 

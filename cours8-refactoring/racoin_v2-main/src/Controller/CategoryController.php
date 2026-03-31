@@ -10,7 +10,7 @@ use App\Model\Category;
 use App\Model\Photo;
 use Twig\Environment;
 
-class CategoryController
+final class CategoryController
 {
     protected array $advertisements = [];
 

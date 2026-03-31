@@ -9,7 +9,7 @@ use App\Model\Advertiser;
 use App\Model\Photo;
 use Twig\Environment;
 
-class HomeController
+final class HomeController
 {
     protected array $advertisements = [];
 

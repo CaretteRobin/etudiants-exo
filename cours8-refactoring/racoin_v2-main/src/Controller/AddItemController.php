@@ -9,9 +9,9 @@ use App\Model\Advertiser;
 use App\Support\AdvertFormValidator;
 use Twig\Environment;
 
-class AddItemController
+final class AddItemController
 {
-    private AdvertFormValidator $validator;
+    private readonly AdvertFormValidator $validator;
 
     public function __construct()
     {

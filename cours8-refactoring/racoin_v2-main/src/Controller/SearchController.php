@@ -8,7 +8,7 @@ use App\Model\Advert;
 use App\Model\Category;
 use Twig\Environment;
 
-class SearchController
+final class SearchController
 {
     public function showForm(Environment $twig, array $menu, string $basePath, array $categories): void
     {

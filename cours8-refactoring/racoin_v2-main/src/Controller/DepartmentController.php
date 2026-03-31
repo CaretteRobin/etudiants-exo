@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Model\Department;
 
-class DepartmentController
+final class DepartmentController
 {
     public function getAllDepartments(): array
     {
