@@ -5,7 +5,7 @@ import { fetchCard } from '../services/cardService';
 import CardProperty from '../components/CardProperty.vue';
 
 const route = useRoute();
-const card = ref({});
+const card = ref(null);
 const loadingCard = ref(true);
 
 async function loadCard(uuid) {
@@ -22,7 +22,7 @@ onMounted(() => {
 
 <template>
     <div class="loading" v-if="loadingCard">Loading...</div>
-    <div v-else>
+    <div v-else-if="card">
         <div class="card">
             <h1>{{ card.name }}</h1>
             <CardProperty name="coût en mana" :value="card.manaCost" />
@@ -30,8 +30,11 @@ onMounted(() => {
             <CardProperty name="Type" :value="card.type" />
             <CardProperty name="Rareté" :value="card.rarity" />
             <CardProperty name="Édition" :value="card.setCode" />
+            <CardProperty name="Artiste" :value="card.artist?.name" />
+            <CardProperty name="Identifiant artiste" :value="card.artist?.artistExternalId" />
         </div>
     </div>
+    <div v-else>Carte introuvable.</div>
     <div>
         <router-link :to="{ name: 'all-cards' }">Retourner à la liste complète</router-link>
     </div>

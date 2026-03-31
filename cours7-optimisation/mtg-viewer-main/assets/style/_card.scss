@@ -1,12 +1,14 @@
 .card {
-
     margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
 
     .card-property {
         display: flex;
+        gap: 10px;
 
         .value {
-            margin-left: 10px;
             font-weight: lighter;
         }
     }
@@ -22,5 +24,65 @@
 
 .card-result {
     margin-bottom: 20px;
+}
 
+.card-result-meta {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.filters {
+    display: grid;
+    gap: 16px;
+    margin: 20px 0;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    input,
+    select {
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+        color: inherit;
+        background: rgba(0, 0, 0, 0.15);
+    }
+}
+
+.search-input {
+    @media (min-width: 768px) {
+        grid-column: span 2;
+    }
+}
+
+.results-summary {
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+    opacity: 0.75;
+}
+
+.pagination {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+
+    button {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
 }

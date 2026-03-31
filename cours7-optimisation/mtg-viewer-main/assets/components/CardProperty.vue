@@ -5,8 +5,8 @@ defineProps({
         required: true,
     },
     value: {
-        type: String,
-        required: true,
+        type: [String, Number],
+        default: null,
     },
 });
 </script>
@@ -14,6 +14,6 @@ defineProps({
 <template>
     <div class="card-property">
         <div class="name">{{ name }} : </div>
-        <div class="value">{{ value }}</div>
+        <div class="value">{{ value ?? 'N/A' }}</div>
     </div>
 </template>
