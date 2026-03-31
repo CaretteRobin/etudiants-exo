@@ -3,7 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ArtistRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArtistRepository::class)]
@@ -15,10 +16,18 @@ class Artist implements \JsonSerializable
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Name = null;
+    private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $artistExternalId = null;
+
+    #[ORM\OneToMany(mappedBy: 'artist', targetEntity: Card::class)]
+    private Collection $cards;
+
+    public function __construct()
+    {
+        $this->cards = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -27,12 +36,12 @@ class Artist implements \JsonSerializable
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): static
+    public function setName(string $name): static
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
@@ -49,11 +58,19 @@ class Artist implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return Collection<int, Card>
+     */
+    public function getCards(): Collection
+    {
+        return $this->cards;
+    }
+
     public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,
-            'Name' => $this->Name,
+            'name' => $this->name,
             'artistExternalId' => $this->artistExternalId,
         ];
     }

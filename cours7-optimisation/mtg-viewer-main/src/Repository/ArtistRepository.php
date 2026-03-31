@@ -21,28 +21,35 @@ class ArtistRepository extends ServiceEntityRepository
         parent::__construct($registry, Artist::class);
     }
 
-//    /**
-//     * @return Artist[] Returns an array of Artist objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return array<string, int>
+     */
+    public function getIndexedByExternalId(): array
+    {
+        $result = $this->createQueryBuilder('artist')
+            ->select('artist.id, artist.artistExternalId')
+            ->getQuery()
+            ->getArrayResult()
+        ;
 
-//    public function findOneBySomeField($value): ?Artist
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $artists = [];
+        foreach ($result as $artist) {
+            $artists[$artist['artistExternalId']] = (int) $artist['id'];
+        }
+
+        return $artists;
+    }
+
+    /**
+     * @return list<array{id: int, name: string}>
+     */
+    public function findAllForFilter(): array
+    {
+        return $this->createQueryBuilder('artist')
+            ->select('artist.id, artist.name')
+            ->orderBy('artist.name', 'ASC')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
 }

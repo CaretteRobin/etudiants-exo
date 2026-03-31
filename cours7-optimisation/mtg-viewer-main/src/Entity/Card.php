@@ -7,6 +7,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
+#[ORM\Table(indexes: [
+    new ORM\Index(name: 'idx_card_name', columns: ['name']),
+    new ORM\Index(name: 'idx_card_set_code_name', columns: ['set_code', 'name']),
+    new ORM\Index(name: 'idx_card_artist_name', columns: ['artist_id', 'name']),
+])]
 class Card implements \JsonSerializable
 {
     #[ORM\Id]
@@ -40,6 +45,10 @@ class Card implements \JsonSerializable
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $setCode = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cards')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Artist $artist = null;
 
     public function getId(): ?int
     {
@@ -154,6 +163,18 @@ class Card implements \JsonSerializable
         return $this;
     }
 
+    public function getArtist(): ?Artist
+    {
+        return $this->artist;
+    }
+
+    public function setArtist(?Artist $artist): static
+    {
+        $this->artist = $artist;
+
+        return $this;
+    }
+
     public function jsonSerialize(): mixed
     {
         return [
@@ -167,6 +188,7 @@ class Card implements \JsonSerializable
             'text' => $this->text,
             'subtype' => $this->subtype,
             'setCode' => $this->setCode,
+            'artist' => $this->artist,
         ];
     }
 }
