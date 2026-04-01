@@ -8,18 +8,18 @@ use model\Categorie;
 class Search {
 
     function show($twig, $menu, $chemin, $cat) {
-        $template = $twig->loadTemplate("search.html.twig");
+        $template = "search.html.twig";
         $menu = array(
             array('href' => $chemin,
                 'text' => 'Acceuil'),
             array('href' => $chemin."/search",
                 'text' => "Recherche")
         );
-        echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat));
+        echo $twig->render($template, array("breadcrumb" => $menu, "chemin" => $chemin, "categories" => $cat));
     }
 
     function research($array, $twig, $menu, $chemin, $cat) {
-        $template = $twig->loadTemplate("index.html.twig");
+        $template = "index.html.twig";
         $menu = array(
             array('href' => $chemin,
                 'text' => 'Acceuil'),
@@ -27,50 +27,56 @@ class Search {
                 'text' => "Résultats de la recherche")
         );
 
-        $nospace_mc = str_replace(' ', '', $array['motclef']);
-        $nospace_cp = str_replace(' ', '', $array['codepostal']);
+        $motclef = trim((string)($array['motclef'] ?? ''));
+        $codepostal = trim((string)($array['codepostal'] ?? ''));
+        $categorie = (string)($array['categorie'] ?? 'Toutes catégories');
+        $prixMin = (string)($array['prix-min'] ?? 'Min');
+        $prixMax = (string)($array['prix-max'] ?? 'Max');
+
+        $nospace_mc = str_replace(' ', '', $motclef);
+        $nospace_cp = str_replace(' ', '', $codepostal);
 
 
         $query = Annonce::select();
 
         if( ($nospace_mc === "") &&
             ($nospace_cp === "") &&
-            (($array['categorie'] === "Toutes catégories" || $array['categorie'] === "-----")) &&
-            ($array['prix-min'] === "Min") &&
-            ( ($array['prix-max'] === "Max") || ($array['prix-max'] === "nolimit") ) ) {
+            (($categorie === "Toutes catégories" || $categorie === "-----")) &&
+            ($prixMin === "Min") &&
+            ( ($prixMax === "Max") || ($prixMax === "nolimit") ) ) {
             $annonce = Annonce::all();
 
         } else {
             // A REFAIRE SEPARER LES TRUCS
             if( ($nospace_mc !== "") ) {
-                $query->where('description', 'like', '%'.$array['motclef'].'%');
+                $query->where('description', 'like', '%'.$motclef.'%');
             }
 
             if( ($nospace_cp !== "") ) {
-                $query->where('ville', '=', $array['codepostal']);
+                $query->where('ville', '=', $codepostal);
             }
 
-            if ( ($array['categorie'] !== "Toutes catégories" && $array['categorie'] !== "-----") ) {
-                $categ = Categorie::select('id_categorie')->where('id_categorie', '=', $array['categorie'])->first()->id_categorie;
+            if ( ($categorie !== "Toutes catégories" && $categorie !== "-----") ) {
+                $categ = Categorie::select('id_categorie')->where('id_categorie', '=', $categorie)->first()->id_categorie;
                 $query->where('id_categorie', '=', $categ);
             }
 
-            if ( $array['prix-min'] !== "Min" && $array['prix-max'] !== "Max") {
-                if($array['prix-max'] !== "nolimit") {
-                    $query->whereBetween('prix', array($array['prix-min'], $array['prix-max']));
+            if ( $prixMin !== "Min" && $prixMax !== "Max") {
+                if($prixMax !== "nolimit") {
+                    $query->whereBetween('prix', array($prixMin, $prixMax));
                 } else {
-                    $query->where('prix', '>=', $array['prix-min']);
+                    $query->where('prix', '>=', $prixMin);
                 }
-            } elseif ( $array['prix-max'] !== "Max" && $array['prix-max'] !== "nolimit") {
-                $query->where('prix', '<=', $array['prix-max']);
-            } elseif ( $array['prix-min'] !== "Min" ) {
-                $query->where('prix', '>=', $array['prix-min']);
+            } elseif ( $prixMax !== "Max" && $prixMax !== "nolimit") {
+                $query->where('prix', '<=', $prixMax);
+            } elseif ( $prixMin !== "Min" ) {
+                $query->where('prix', '>=', $prixMin);
             }
 
             $annonce = $query->get();
         }
 
-        echo $template->render(array("breadcrumb" => $menu, "chemin" => $chemin, "annonces" => $annonce, "categories" => $cat));
+        echo $twig->render($template, array("breadcrumb" => $menu, "chemin" => $chemin, "annonces" => $annonce, "categories" => $cat));
 
     }
 

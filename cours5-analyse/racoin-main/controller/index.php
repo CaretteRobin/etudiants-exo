@@ -33,14 +33,14 @@ class index {
     }
 
     public function displayAllAnnonce($twig, $menu, $chemin, $cat) {
-        $template = $twig->loadTemplate("index.html.twig");
+        $template = "index.html.twig";
         $menu = array(
             array('href' => $chemin,
                 'text' => 'Acceuil'),
         );
 
         $this->getAll($chemin);
-        echo $template->render(array(
+        echo $twig->render($template, array(
             "breadcrumb" => $menu,
             "chemin" => $chemin,
             "categories" => $cat,
