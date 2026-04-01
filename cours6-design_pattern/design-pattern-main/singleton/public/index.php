@@ -1,7 +1,19 @@
 <?php
-require('../vendor/autoload.php');
+require __DIR__ . '/../vendor/autoload.php';
 
+use App\Config;
 
-# TODO: Récuperer une instance de Config
-# Afficher une valeur contenu dans config.php
-# Récupérer une seconde instance de Config et vérifié que les deux instances sont identiques
+$config = Config::getInstance();
+$secondConfig = Config::getInstance();
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Singleton</title>
+</head>
+<body>
+    <p>Debug: <?= $config->get('debug') ? 'true' : 'false'; ?></p>
+    <p>Meme instance: <?= $config === $secondConfig ? 'oui' : 'non'; ?></p>
+</body>
+</html>

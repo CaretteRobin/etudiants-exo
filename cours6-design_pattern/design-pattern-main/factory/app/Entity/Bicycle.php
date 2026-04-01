@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
-class Bicycle {
+class Bicycle implements VehicleInterface {
     private $costPerKm;
     private $fuelType;
 
     public function __construct($costPerKm, $fuelType) {
         $this->costPerKm = $costPerKm;
         $this->fuelType = $fuelType;
+    }
+
+    public function getName() {
+        return 'Bicycle';
     }
 
     public function getCostPerKm() {
